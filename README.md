@@ -1,5 +1,5 @@
 
-# Sample-STL-Container-and-Iterator
+# Sample STL Container and Iterator
 
 ## About
 
