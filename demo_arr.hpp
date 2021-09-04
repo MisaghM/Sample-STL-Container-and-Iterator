@@ -240,13 +240,12 @@ public:
     pointer       data()       noexcept { return arr_; }
     const_pointer data() const noexcept { return arr_; }
 
-    iterator       begin()       noexcept { return iterator(&arr_[0]); }
-    iterator       end()         noexcept { return iterator(&arr_[size_]); }
-    const_iterator begin() const noexcept { return const_iterator(&arr_[0]); }
-    const_iterator end()   const noexcept { return const_iterator(&arr_[size_]); }
-
-    const_iterator cbegin() const noexcept { return const_iterator(&arr_[0]); }
-    const_iterator cend()   const noexcept { return const_iterator(&arr_[size_]); }
+    iterator       begin()        noexcept { return iterator(&arr_[0]); }
+    iterator       end()          noexcept { return iterator(&arr_[size_]); }
+    const_iterator begin()  const noexcept { return const_iterator(&arr_[0]); }
+    const_iterator end()    const noexcept { return const_iterator(&arr_[size_]); }
+    const_iterator cbegin() const noexcept { return begin(); }
+    const_iterator cend()   const noexcept { return end(); }
 
     friend void swap(Arr& a, Arr& b) noexcept {
         std::swap(a.size_, b.size_);
