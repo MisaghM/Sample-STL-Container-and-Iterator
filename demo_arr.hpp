@@ -95,34 +95,33 @@ private:
     pointer ptr_;
 };
 
-//allocator rebind helper alias
+namespace detail {
+
 template <class Allocator, class Type>
 using RebindAlloc = typename std::allocator_traits<Allocator>::template rebind_alloc<Type>;
 
-//iterator category helper alias
 template <class T>
 using IterCategory = typename std::iterator_traits<T>::iterator_category;
 
-//void_t metafunction
 template <class...>
 using void_t = void;
 
-//is_iterator metafunction
 template <class T, class = void>
 struct is_iterator : std::false_type {};
 template <class T>
 struct is_iterator<T, void_t<IterCategory<T>>> : std::true_type {};
 
-//is_input_iterator helper alias
 template <class T>
 using is_input_iterator = std::is_convertible<IterCategory<T>, std::input_iterator_tag>;
+
+} // namespace detail
 
 //demo::Arr class
 template <class T, class Allocator_ = std::allocator<T>>
 class Arr {
 private:
     //rebind to Allocator_<T> in case it's not T
-    using Allocator   = RebindAlloc<Allocator_, T>;
+    using Allocator   = detail::RebindAlloc<Allocator_, T>;
     using allocTraits = std::allocator_traits<Allocator>;
     Allocator alloc_;
 
@@ -174,9 +173,9 @@ public:
         std::copy(list.begin(), list.end(), arr_);
     }
     template <class Iter_,
-              class = typename std::enable_if<is_input_iterator<Iter_>::value>::type>
+              class = typename std::enable_if<detail::is_input_iterator<Iter_>::value>::type>
     Arr(Iter_ first, Iter_ last) {
-        assign_range(first, last, IterCategory<Iter_> {});
+        assign_range(first, last, detail::IterCategory<Iter_> {});
     }
 
     ~Arr() { dtor_impl(); }
@@ -200,9 +199,9 @@ public:
     }
 
     template <class Iter_,
-              class = typename std::enable_if<is_input_iterator<Iter_>::value>::type>
+              class = typename std::enable_if<detail::is_input_iterator<Iter_>::value>::type>
     void assign(Iter_ first, Iter_ last) {
-        assign_range(first, last, IterCategory<Iter_> {});
+        assign_range(first, last, detail::IterCategory<Iter_> {});
     }
     void assign(size_type n, const_reference value) {
         if (size_ != n) realloc_to_size_empty(n);
