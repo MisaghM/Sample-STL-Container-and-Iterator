@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <initializer_list>
 #include <iterator>
+#include <limits>
 #include <memory>
 #include <ostream>
 #include <stdexcept>
@@ -215,8 +216,11 @@ public:
     reference       operator[](size_type index)       noexcept { return arr_[index]; }
     const_reference operator[](size_type index) const noexcept { return arr_[index]; }
 
-    size_type size()  const noexcept { return size_; }
-    bool empty() const noexcept { return size_ == 0; }
+    bool empty()         const noexcept { return size_ == 0; }
+    size_type size()     const noexcept { return size_; }
+    size_type max_size() const noexcept {
+        return std::min<size_type>(allocTraits::max_size(alloc_), std::numeric_limits<difference_type>::max());
+    }
 
     const_reference at(size_type index) const {
         if (index >= size_ || index < 0) throw_out_of_range();
