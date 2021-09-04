@@ -23,7 +23,7 @@ Hopefully it can help you understand more about the implementation of standard c
 int main() {
     //There are 2 classes in demo_arr.hpp:
     //demo::Arr and demo::Iter (which has a private constructor)
-    //And some helper metafunctions. (is_iterator, RebindAlloc, etc.)
+    //And some helper metafunctions in demo::detail. (is_iterator, RebindAlloc, etc.)
 
     demo::Arr<int> array(4);
     array.assign(array.size(), 23);
