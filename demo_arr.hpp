@@ -230,10 +230,10 @@ public:
         return const_cast<reference>(static_cast<const Arr&>(*this).at(index));
     }
 
-    reference       front()       noexcept { return arr_[0]; }
-    reference       back()        noexcept { return arr_[size_ - 1]; }
-    const_reference front() const noexcept { return arr_[0]; }
-    const_reference back()  const noexcept { return arr_[size_ - 1]; }
+    reference       front()       noexcept { return *begin(); }
+    reference       back()        noexcept { return *(end() - 1); }
+    const_reference front() const noexcept { return *begin(); }
+    const_reference back()  const noexcept { return *(end() - 1); }
 
     allocator_type get_allocator() const noexcept { return alloc_; }
 
