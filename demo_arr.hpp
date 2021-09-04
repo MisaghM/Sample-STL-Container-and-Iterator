@@ -135,8 +135,10 @@ public:
     using size_type       = typename allocTraits::size_type;       //std::size_t
     using difference_type = typename allocTraits::difference_type; //std::ptrdiff_t
 
-    using iterator       = Iter<pointer, Arr>;
-    using const_iterator = Iter<const_pointer, Arr>;
+    using iterator               = Iter<pointer, Arr>;
+    using const_iterator         = Iter<const_pointer, Arr>;
+    using reverse_iterator       = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 public:
     Arr() noexcept
@@ -245,6 +247,13 @@ public:
     const_iterator end()    const noexcept { return const_iterator(&arr_[size_]); }
     const_iterator cbegin() const noexcept { return begin(); }
     const_iterator cend()   const noexcept { return end(); }
+
+    reverse_iterator       rbegin()        noexcept { return reverse_iterator(end()); }
+    reverse_iterator       rend()          noexcept { return reverse_iterator(begin()); }
+    const_reverse_iterator rbegin()  const noexcept { return const_reverse_iterator(end()); }
+    const_reverse_iterator rend()    const noexcept { return const_reverse_iterator(begin()); }
+    const_reverse_iterator crbegin() const noexcept { return rbegin(); }
+    const_reverse_iterator crend()   const noexcept { return rend(); }
 
     friend void swap(Arr& a, Arr& b) noexcept {
         std::swap(a.size_, b.size_);
