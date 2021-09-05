@@ -218,7 +218,7 @@ public:
     reference       operator[](size_type index)       noexcept { return arr_[index]; }
     const_reference operator[](size_type index) const noexcept { return arr_[index]; }
 
-    bool empty()         const noexcept { return size_ == 0; }
+    bool      empty()    const noexcept { return size_ == 0; }
     size_type size()     const noexcept { return size_; }
     size_type max_size() const noexcept {
         return std::min<size_type>(allocTraits::max_size(alloc_), std::numeric_limits<difference_type>::max());
