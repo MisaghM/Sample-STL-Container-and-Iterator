@@ -328,7 +328,7 @@ private:
     template <class Iter_>
     void assign_range(Iter_ first, Iter_ last, std::input_iterator_tag) {
         iterator curr = begin();
-        for (; first != last && curr != end(); ++first, ++curr) {
+        for (; first != last && curr != end(); ++first, (void)++curr) {
             *curr = *first;
         }
         destroy_range(curr, end());
