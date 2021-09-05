@@ -26,8 +26,9 @@ public:
     using reference         = typename iterTraits::reference;  //(const) T&
     using difference_type   = typename MyArr::difference_type; //std::ptrdiff_t
 
-    template <class PTR_, class ARR_>
-    friend class Iter;
+    //make const_iterator a friend of iterator
+    friend typename std::conditional<std::is_same<Iter, typename MyArr::iterator>::value,
+                                     typename MyArr::const_iterator, void>::type;
 
     friend MyArr;
 
