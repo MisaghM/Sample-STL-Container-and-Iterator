@@ -98,22 +98,22 @@ private:
 
 namespace detail {
 
-template <class Allocator, class Type>
-using RebindAlloc = typename std::allocator_traits<Allocator>::template rebind_alloc<Type>;
+    template <class Allocator, class Type>
+    using RebindAlloc = typename std::allocator_traits<Allocator>::template rebind_alloc<Type>;
 
-template <class T>
-using IterCategory = typename std::iterator_traits<T>::iterator_category;
+    template <class T>
+    using IterCategory = typename std::iterator_traits<T>::iterator_category;
 
-template <class...>
-using void_t = void;
+    template <class...>
+    using void_t = void;
 
-template <class T, class = void>
-struct is_iterator : std::false_type {};
-template <class T>
-struct is_iterator<T, void_t<IterCategory<T>>> : std::true_type {};
+    template <class T, class = void>
+    struct is_iterator : std::false_type {};
+    template <class T>
+    struct is_iterator<T, void_t<IterCategory<T>>> : std::true_type {};
 
-template <class T>
-using is_input_iterator = std::is_convertible<IterCategory<T>, std::input_iterator_tag>;
+    template <class T>
+    using is_input_iterator = std::is_convertible<IterCategory<T>, std::input_iterator_tag>;
 
 } // namespace detail
 
