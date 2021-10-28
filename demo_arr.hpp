@@ -225,7 +225,7 @@ public:
     }
 
     const_reference at(size_type index) const {
-        if (index >= size_ || index < 0) throw_out_of_range();
+        if (index >= size_) throw_out_of_range();
         return arr_[index];
     }
     reference at(size_type index) {
