@@ -233,9 +233,9 @@ public:
     }
 
     reference       front()       noexcept { return *begin(); }
-    reference       back()        noexcept { return *(end() - 1); }
+    reference       back()        noexcept { return *(--end()); }
     const_reference front() const noexcept { return *begin(); }
-    const_reference back()  const noexcept { return *(end() - 1); }
+    const_reference back()  const noexcept { return *(--end()); }
 
     allocator_type get_allocator() const noexcept { return alloc_; }
 
