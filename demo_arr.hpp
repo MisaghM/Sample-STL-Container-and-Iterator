@@ -13,7 +13,7 @@
 
 namespace demo {
 
-//demo::Iter class
+// demo::Iter class
 template <class Pointer, class MyArr>
 class Iter {
 private:
@@ -21,12 +21,12 @@ private:
 
 public:
     using iterator_category = std::random_access_iterator_tag;
-    using value_type        = typename iterTraits::value_type; //T
-    using pointer           = typename iterTraits::pointer;    //(const) T*
-    using reference         = typename iterTraits::reference;  //(const) T&
-    using difference_type   = typename MyArr::difference_type; //std::ptrdiff_t
+    using value_type        = typename iterTraits::value_type; // T
+    using pointer           = typename iterTraits::pointer;    // (const) T*
+    using reference         = typename iterTraits::reference;  // (const) T&
+    using difference_type   = typename MyArr::difference_type; // std::ptrdiff_t
 
-    //make const_iterator a friend of iterator
+    // make const_iterator a friend of iterator
     friend typename std::conditional<std::is_same<Iter, typename MyArr::iterator>::value,
                                      typename MyArr::const_iterator, void>::type;
 
@@ -36,13 +36,13 @@ private:
     explicit Iter(pointer ptr) noexcept : ptr_(ptr) {}
 
 public:
-    //enable conversion from iterator to const_iterator
-    template <class PTR_,
-              class = typename std::enable_if<std::is_same<PTR_, typename MyArr::pointer>::value>::type>
-    Iter(const Iter<PTR_, MyArr>& i) noexcept
-        : Iter(static_cast<pointer>(i.ptr_)) {}
+    // enable conversion from iterator to const_iterator
+    template <class Ptr,
+              class = typename std::enable_if<std::is_same<Ptr, typename MyArr::pointer>::value>::type>
+    Iter(const Iter<Ptr, MyArr>& itr) noexcept
+        : Iter(static_cast<pointer>(itr.ptr_)) {}
 
-    //forward_iterator_tag
+    // forward_iterator_tag
     friend bool operator==(const Iter& lhs, const Iter& rhs) noexcept { return lhs.ptr_ == rhs.ptr_; }
     friend bool operator!=(const Iter& lhs, const Iter& rhs) noexcept { return !(lhs == rhs); }
 
@@ -50,7 +50,7 @@ public:
     pointer   operator->() const noexcept { return ptr_; }
 
     Iter& operator++() noexcept {
-        ptr_++;
+        ++ptr_;
         return *this;
     }
     Iter operator++(int) noexcept {
@@ -59,9 +59,9 @@ public:
         return temp;
     }
 
-    //bidirectional_iterator_tag
+    // bidirectional_iterator_tag
     Iter& operator--() noexcept {
-        ptr_--;
+        --ptr_;
         return *this;
     }
     Iter operator--(int) noexcept {
@@ -70,7 +70,7 @@ public:
         return temp;
     }
 
-    //random_access_iterator_tag
+    // random_access_iterator_tag
     reference operator[](difference_type n) const noexcept { return ptr_[n]; }
 
     Iter& operator+=(difference_type rhs) noexcept {
@@ -117,24 +117,24 @@ namespace detail {
 
 } // namespace detail
 
-//demo::Arr class
+// demo::Arr class
 template <class T, class Allocator_ = std::allocator<T>>
 class Arr {
 private:
-    //rebind to Allocator_<T> in case it's not T
+    // rebind to Allocator_<T> in case it's not T
     using Allocator   = detail::RebindAlloc<Allocator_, T>;
     using allocTraits = std::allocator_traits<Allocator>;
     Allocator alloc_;
 
 public:
     using allocator_type  = Allocator;
-    using value_type      = typename allocTraits::value_type;      //T
-    using reference       = value_type&;                           //T&
-    using const_reference = const value_type&;                     //const T&
-    using pointer         = typename allocTraits::pointer;         //T*
-    using const_pointer   = typename allocTraits::const_pointer;   //const T*
-    using size_type       = typename allocTraits::size_type;       //std::size_t
-    using difference_type = typename allocTraits::difference_type; //std::ptrdiff_t
+    using value_type      = typename allocTraits::value_type;      // T
+    using reference       = value_type&;                           // T&
+    using const_reference = const value_type&;                     // const T&
+    using pointer         = typename allocTraits::pointer;         // T*
+    using const_pointer   = typename allocTraits::const_pointer;   // const T*
+    using size_type       = typename allocTraits::size_type;       // std::size_t
+    using difference_type = typename allocTraits::difference_type; // std::ptrdiff_t
 
     using iterator               = Iter<pointer, Arr>;
     using const_iterator         = Iter<const_pointer, Arr>;
@@ -221,7 +221,8 @@ public:
     bool      empty()    const noexcept { return size_ == 0; }
     size_type size()     const noexcept { return size_; }
     size_type max_size() const noexcept {
-        return std::min<size_type>(allocTraits::max_size(alloc_), std::numeric_limits<difference_type>::max());
+        return std::min<size_type>(allocTraits::max_size(alloc_),
+                                   std::numeric_limits<difference_type>::max());
     }
 
     const_reference at(size_type index) const {
@@ -257,8 +258,9 @@ public:
     const_reverse_iterator crend()   const noexcept { return rend(); }
 
     friend void swap(Arr& a, Arr& b) noexcept {
-        std::swap(a.size_, b.size_);
-        std::swap(a.arr_, b.arr_);
+        using std::swap;
+        swap(a.size_, b.size_);
+        swap(a.arr_, b.arr_);
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Arr& arr) noexcept {
@@ -333,7 +335,7 @@ private:
         }
         destroy_range(curr, end());
         for (; first != last; ++first) {
-            //emplace_back(*first);
+            // emplace_back(*first);
         }
     }
     template <class Iter_>
