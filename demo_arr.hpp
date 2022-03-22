@@ -17,13 +17,13 @@ namespace demo {
 template <class Pointer, class MyArr>
 class Iter {
 private:
-    using iterTraits = std::iterator_traits<Pointer>;
+    using IterTraits = std::iterator_traits<Pointer>;
 
 public:
     using iterator_category = std::random_access_iterator_tag;
-    using value_type        = typename iterTraits::value_type; // T
-    using pointer           = typename iterTraits::pointer;    // (const) T*
-    using reference         = typename iterTraits::reference;  // (const) T&
+    using value_type        = typename IterTraits::value_type; // T
+    using pointer           = typename IterTraits::pointer;    // (const) T*
+    using reference         = typename IterTraits::reference;  // (const) T&
     using difference_type   = typename MyArr::difference_type; // std::ptrdiff_t
 
     // make const_iterator a friend of iterator
@@ -123,18 +123,18 @@ class Arr {
 private:
     // rebind to Allocator_<T> in case it's not T
     using Allocator   = detail::RebindAlloc<Allocator_, T>;
-    using allocTraits = std::allocator_traits<Allocator>;
+    using AllocTraits = std::allocator_traits<Allocator>;
     Allocator alloc_;
 
 public:
     using allocator_type  = Allocator;
-    using value_type      = typename allocTraits::value_type;      // T
+    using value_type      = typename AllocTraits::value_type;      // T
     using reference       = value_type&;                           // T&
     using const_reference = const value_type&;                     // const T&
-    using pointer         = typename allocTraits::pointer;         // T*
-    using const_pointer   = typename allocTraits::const_pointer;   // const T*
-    using size_type       = typename allocTraits::size_type;       // std::size_t
-    using difference_type = typename allocTraits::difference_type; // std::ptrdiff_t
+    using pointer         = typename AllocTraits::pointer;         // T*
+    using const_pointer   = typename AllocTraits::const_pointer;   // const T*
+    using size_type       = typename AllocTraits::size_type;       // std::size_t
+    using difference_type = typename AllocTraits::difference_type; // std::ptrdiff_t
 
     using iterator               = Iter<pointer, Arr>;
     using const_iterator         = Iter<const_pointer, Arr>;
@@ -221,7 +221,7 @@ public:
     bool      empty()    const noexcept { return size_ == 0; }
     size_type size()     const noexcept { return size_; }
     size_type max_size() const noexcept {
-        return std::min<size_type>(allocTraits::max_size(alloc_),
+        return std::min<size_type>(AllocTraits::max_size(alloc_),
                                    std::numeric_limits<difference_type>::max());
     }
 
@@ -297,31 +297,31 @@ private:
     }
 
     void ctor_impl(size_type size) {
-        arr_ = size ? allocTraits::allocate(alloc_, size) : nullptr;
+        arr_ = size ? AllocTraits::allocate(alloc_, size) : nullptr;
         size_ = size;
     }
 
     void dtor_impl() noexcept {
         destroy_range(begin(), end());
-        allocTraits::deallocate(alloc_, arr_, size_);
+        AllocTraits::deallocate(alloc_, arr_, size_);
     }
 
     template <class... Args>
     void construct_range(iterator first, iterator last, Args&&... constructParams)
                          noexcept(std::is_nothrow_constructible<value_type, Args...>::value) {
         for (; first != last; ++first) {
-            allocTraits::construct(alloc_, first.ptr_, std::forward<Args>(constructParams)...);
+            AllocTraits::construct(alloc_, first.ptr_, std::forward<Args>(constructParams)...);
         }
     }
 
     void destroy_range(iterator first, iterator last) noexcept {
         for (; first != last; ++first) {
-            allocTraits::destroy(alloc_, first.ptr_);
+            AllocTraits::destroy(alloc_, first.ptr_);
         }
     }
 
     void realloc_to_size_empty(size_type size) {
-        pointer temp = allocTraits::allocate(alloc_, size);
+        pointer temp = AllocTraits::allocate(alloc_, size);
         dtor_impl();
         arr_ = temp;
         size_ = size;
